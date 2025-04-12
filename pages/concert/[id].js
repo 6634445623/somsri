@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import styles from '../../styles/home.module.css';
+import { useState } from 'react';
+import Layout from '../../components/Layout';
 
 const concerts = [
   {
@@ -30,16 +32,24 @@ export default function ConcertDetails() {
   const { id } = router.query;
   const concert = concerts.find((concert) => concert.id === parseInt(id));
 
+  const [selectedSeats, setSelectedSeats] = useState([]);
+
   if (!concert) {
     return <p>Concert not found.</p>;
   }
+
+  const handleSeatClick = (seat) => {
+    setSelectedSeats((prev) =>
+      prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat]
+    );
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const name = formData.get('name');
     const email = formData.get('email');
-    const tickets = formData.get('tickets');
+    const tickets = selectedSeats.length;
 
     router.push({
       pathname: '/confirmation',
@@ -47,32 +57,43 @@ export default function ConcertDetails() {
     });
   };
 
-  return (
-    <main className={styles.main}>
-      <h1>{concert.artist}</h1>
-      <p>Date: {concert.date}</p>
-      <p>Venue: {concert.venue}</p>
-      <p>Price: {concert.price}</p>
+  const seats = Array.from({ length: 30 }, (_, i) => i + 1);
 
-      <h2>Reserve Your Tickets</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Name:
-          <input type="text" name="name" required />
-        </label>
-        <br />
-        <label>
-          Email:
-          <input type="email" name="email" required />
-        </label>
-        <br />
-        <label>
-          Number of Tickets:
-          <input type="number" name="tickets" min="1" required />
-        </label>
-        <br />
-        <button type="submit">Reserve</button>
-      </form>
-    </main>
+  return (
+    <Layout>
+      <main className={styles.main}>
+        <h1>{concert.artist}</h1>
+        <p>Date: {concert.date}</p>
+        <p>Venue: {concert.venue}</p>
+        <p>Price: {concert.price}</p>
+
+        <h2>Reserve Your Tickets</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Name:
+            <input type="text" name="name" required />
+          </label>
+          <br />
+          <label>
+            Email:
+            <input type="email" name="email" required />
+          </label>
+          <br />
+          <div className={styles.seatPicker}>
+            {seats.map((seat) => (
+              <div
+                key={seat}
+                className={`${styles.seat} ${selectedSeats.includes(seat) ? styles.selected : ''}`}
+                onClick={() => handleSeatClick(seat)}
+              >
+                {seat}
+              </div>
+            ))}
+          </div>
+          <br />
+          <button type="submit">Reserve</button>
+        </form>
+      </main>
+    </Layout>
   );
 }

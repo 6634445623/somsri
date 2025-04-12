@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
-import Button from '../components/Button'
-import ClickCount from '../components/ClickCount'
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from '../styles/home.module.css';
+import Layout from '../components/Layout';
 
 const concerts = [
   {
@@ -28,32 +27,12 @@ const concerts = [
   },
 ];
 
-function throwError() {
-  console.log(
-    // The function body() is not defined
-    document.body()
-  )
-}
-
 export default function Home() {
-  const [count, setCount] = useState(0)
-  const increment = useCallback(() => {
-    setCount((v) => v + 1)
-  }, [setCount])
-
-  useEffect(() => {
-    const r = setInterval(() => {
-      increment()
-    }, 1000)
-
-    return () => {
-      clearInterval(r)
-    }
-  }, [increment])
-
   return (
-    <main className={styles.main}>
-      <h1>Upcoming Concerts</h1>
+    <Layout>
+      <h1>Welcome to SOMSRI</h1>
+      <p>Your gateway to the most exciting concerts around the globe!</p>
+      <h2>Featured Concerts</h2>
       <ul>
         {concerts.map((concert) => (
           <li key={concert.id} className={styles.concertItem}>
@@ -67,36 +46,6 @@ export default function Home() {
           </li>
         ))}
       </ul>
-      <hr className={styles.hr} />
-      <div>
-        <p>
-          Auto incrementing value. The counter won't reset after edits or if
-          there are errors.
-        </p>
-        <p>Current value: {count}</p>
-      </div>
-      <hr className={styles.hr} />
-      <div>
-        <p>Component with state.</p>
-        <ClickCount />
-      </div>
-      <hr className={styles.hr} />
-      <div>
-        <p>
-          The button below will throw 2 errors. You'll see the error overlay to
-          let you know about the errors but it won't break the page or reset
-          your state.
-        </p>
-        <Button
-          onClick={(e) => {
-            setTimeout(() => document.parentNode(), 0)
-            throwError()
-          }}
-        >
-          Throw an Error
-        </Button>
-      </div>
-      <hr className={styles.hr} />
-    </main>
-  )
+    </Layout>
+  );
 }
