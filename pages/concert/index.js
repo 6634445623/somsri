@@ -37,6 +37,7 @@ export default function Concerts() {
               <p>Date: {concert.date}</p>
               <p>Venue: {concert.venue}</p>
               <p>Price: {concert.price}</p>
+              <button>Reserve Now</button>
             </li>
           ))}
         </ul>
