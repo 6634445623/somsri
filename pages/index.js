@@ -1,7 +1,32 @@
 import { useCallback, useEffect, useState } from 'react'
 import Button from '../components/Button'
 import ClickCount from '../components/ClickCount'
-import styles from '../styles/home.module.css'
+import Link from 'next/link';
+import styles from '../styles/home.module.css';
+
+const concerts = [
+  {
+    id: 1,
+    artist: 'The Rolling Stones',
+    date: '2025-05-20',
+    venue: 'Madison Square Garden',
+    price: '$120',
+  },
+  {
+    id: 2,
+    artist: 'Taylor Swift',
+    date: '2025-06-15',
+    venue: 'Wembley Stadium',
+    price: '$150',
+  },
+  {
+    id: 3,
+    artist: 'BTS',
+    date: '2025-07-10',
+    venue: 'Seoul Olympic Stadium',
+    price: '$200',
+  },
+];
 
 function throwError() {
   console.log(
@@ -10,7 +35,7 @@ function throwError() {
   )
 }
 
-function Home() {
+export default function Home() {
   const [count, setCount] = useState(0)
   const increment = useCallback(() => {
     setCount((v) => v + 1)
@@ -28,12 +53,20 @@ function Home() {
 
   return (
     <main className={styles.main}>
-      <h1>Fast Refresh Demo</h1>
-      <p>
-        Fast Refresh is a Next.js feature that gives you instantaneous feedback
-        on edits made to your React components, without ever losing component
-        state.
-      </p>
+      <h1>Upcoming Concerts</h1>
+      <ul>
+        {concerts.map((concert) => (
+          <li key={concert.id} className={styles.concertItem}>
+            <h2>{concert.artist}</h2>
+            <p>Date: {concert.date}</p>
+            <p>Venue: {concert.venue}</p>
+            <p>Price: {concert.price}</p>
+            <Link href={`/concert/${concert.id}`}>
+              <button>Reserve Now</button>
+            </Link>
+          </li>
+        ))}
+      </ul>
       <hr className={styles.hr} />
       <div>
         <p>
@@ -67,5 +100,3 @@ function Home() {
     </main>
   )
 }
-
-export default Home
