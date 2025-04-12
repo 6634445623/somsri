@@ -1,5 +1,6 @@
 import styles from '../../styles/home.module.css';
 import Layout from '../../components/Layout';
+import Link from 'next/link';
 
 const concerts = [
   {
@@ -37,7 +38,9 @@ export default function Concerts() {
               <p>Date: {concert.date}</p>
               <p>Venue: {concert.venue}</p>
               <p>Price: {concert.price}</p>
-              <button>Reserve Now</button>
+              <Link href={`/concert/${concert.id}`}>
+                <button>Reserve Now</button>
+              </Link>
             </li>
           ))}
         </ul>
