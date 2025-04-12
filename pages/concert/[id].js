@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import styles from '../../styles/home.module.css';
 import { useState } from 'react';
 import Layout from '../../components/Layout';
+import Modal from '../../components/Modal'; // Assuming a Modal component exists or will be created
 
 const concerts = [
   {
@@ -33,6 +34,8 @@ export default function ConcertDetails() {
   const concert = concerts.find((concert) => concert.id === parseInt(id));
 
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [reservationDetails, setReservationDetails] = useState(null);
 
   if (!concert) {
     return <p>Concert not found.</p>;
@@ -51,10 +54,8 @@ export default function ConcertDetails() {
     const email = formData.get('email');
     const tickets = selectedSeats.length;
 
-    router.push({
-      pathname: '/confirmation',
-      query: { name, email, tickets, concert: concert.artist },
-    });
+    setReservationDetails({ name, email, tickets, concert: concert.artist });
+    setShowModal(true);
   };
 
   const seats = Array.from({ length: 30 }, (_, i) => i + 1);
@@ -93,6 +94,19 @@ export default function ConcertDetails() {
           <br />
           <button type="submit">Reserve</button>
         </form>
+
+        {showModal && reservationDetails && (
+          <Modal onClose={() => setShowModal(false)}>
+            <h1>Reservation Confirmed</h1>
+            <p>Thank you, {reservationDetails.name}!</p>
+            <p>Your reservation for {reservationDetails.concert} has been confirmed.</p>
+            <p>Details:</p>
+            <ul>
+              <li>Email: {reservationDetails.email}</li>
+              <li>Number of Tickets: {reservationDetails.tickets}</li>
+            </ul>
+          </Modal>
+        )}
       </main>
     </Layout>
   );
